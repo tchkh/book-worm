@@ -9,13 +9,13 @@ function NavBar() {
       <div className='hidden md:flex space-x-4'>
         <a
           href='/login'
-          className='px-9 py-2 rounded-full text-foreground border border-foreground hover:border-muted-foreground hover:text-muted-foreground transition-colors'
+          className='px-9 py-2 rounded-full text-foreground border border-[#75716B] hover:border-muted-foreground hover:text-muted-foreground transition-colors'
         >
           Log in
         </a>
         <a
           href='/signup'
-          className='px-8 py-2 bg-foreground text-white rounded-full hover:bg-muted-foreground transition-colors'
+          className='px-8 py-2 bg-[#26231E] text-white rounded-full hover:bg-muted-foreground transition-colors'
         >
           Sign up
         </a>

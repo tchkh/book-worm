@@ -1,3 +1,4 @@
+import Articles from './components/ArticlesSection'
 import HeroSection from './components/HeroSection'
 import NavBar from './components/NavBar'
 
@@ -6,6 +7,7 @@ function App() {
     <>
       <NavBar />
       <HeroSection />
+      <Articles />
     </>
   )
 }
