@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/select'
 import { blogPosts } from '@/data/blogPosts'
 import authorImage from '../assets/author-image.jpg'
+import { useState } from 'react'
 
 function BlogCard({ post }) {
   return (
@@ -51,6 +52,7 @@ function BlogCard({ post }) {
 
 function Articles() {
   const categories = ['Highlight', 'Cat', 'Inspiration', 'General']
+  const [category, setCategory] = useState('Highlight')
 
   return (
     <div className='w-full max-w-7xl mx-auto md:px-6 lg:px-8 mb-40'>
@@ -67,7 +69,7 @@ function Articles() {
           </div>
         </div>
         <div className='md:hidden w-full'>
-          <Select value='Highlight'>
+          <Select value={category} onValueChange={value => setCategory(value)}>
             <SelectTrigger className='w-full py-3 rounded-sm text-muted-foreground focus:ring-0 focus:ring-offset-0 focus:border-muted-foreground'>
               <SelectValue placeholder='Select category' />
             </SelectTrigger>
@@ -83,17 +85,18 @@ function Articles() {
           </Select>
         </div>
         <div className='hidden md:flex space-x-2'>
-          {categories.map(category => {
-            return (
-              <button
-                key={category}
-                className='px-4 py-3 transition-colors rounded-sm text-sm text-muted-foreground font-medium bg-[#DAD6D1]
-               '
-              >
-                {category}
-              </button>
-            )
-          })}
+          {categories.map(tag => (
+            <button
+              key={tag}
+              onClick={() => setCategory(tag)}
+              disabled={category === tag}
+              className={`px-4 py-3 transition-colors rounded-sm text-sm text-muted-foreground font-medium ${
+                category === tag ? 'bg-[#DAD6D1]' : 'hover:bg-muted'
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
       </div>
 
