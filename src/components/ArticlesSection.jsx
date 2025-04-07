@@ -54,20 +54,33 @@ function Articles() {
   const categories = ['Highlight', 'Cat', 'Inspiration', 'General']
   const [category, setCategory] = useState('Highlight')
   const [posts, setPosts] = useState([])
+  const [page, setPage] = useState(1) // Current page state
+  const [hasMore, setHasMore] = useState(true) // To track if there are more posts to load
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    fetchPosts()
-  }, [])
-
-  const fetchPosts = async () => {
-    try {
-      const response = await axios.get(
-        `https://blog-post-project-api.vercel.app/posts`
-      )
-      setPosts(response.data.posts)
-    } catch (error) {
-      console.log(error)
+    setIsLoading(true) // Set isLoading to true when starting to fetch
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(
+          `https://blog-post-project-api.vercel.app/posts?page=${page}&limit=6&category=${category}`
+        )
+        setPosts(prevPosts => [...prevPosts, ...response.data.posts])
+        setIsLoading(false) // Set isLoading to false after fetching
+        if (response.data.currentPage >= response.data.totalPages) {
+          setHasMore(false) // No more posts to load
+        }
+      } catch (error) {
+        console.log(error)
+        setIsLoading(false) // Set loading to false in case of error
+      }
     }
+
+    fetchPosts() // Call fetchPosts within useEffect
+  }, [page, category])
+
+  const handleLoadMore = () => {
+    setPage(prevPage => prevPage + 1) // Increment page number to load more posts
   }
 
   return (
@@ -85,7 +98,15 @@ function Articles() {
           </div>
         </div>
         <div className="md:hidden w-full">
-          <Select value={category} onValueChange={value => setCategory(value)}>
+          <Select
+            value={category}
+            onValueChange={value => {
+              setCategory(value)
+              setPosts([]) // Clear posts when category changes
+              setPage(1) // Reset page to 1
+              setHasMore(true) // Reset "has more" state
+            }}
+          >
             <SelectTrigger className="w-full py-3 rounded-lg text-muted-foreground focus:ring-0 focus:ring-offset-0 border-[#DAD6D1] bg-white">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
@@ -104,8 +125,12 @@ function Articles() {
           {categories.map(tag => (
             <button
               key={tag}
-              onClick={() => setCategory(tag)}
-              disabled={category === tag}
+              onClick={() => {
+                setCategory(tag)
+                setPosts([]) // Clear posts when category changes
+                setPage(1) // Reset page to 1
+                setHasMore(true) // Reset "has more" state
+              }}
               className={`px-4 py-3 transition-colors rounded-lg text-sm text-muted-foreground font-medium ${
                 category === tag ? 'bg-[#DAD6D1]' : 'hover:bg-white'
               }`}
@@ -135,6 +160,16 @@ function Articles() {
           />
         ))}
       </article>
+      {hasMore && (
+        <div className="text-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className="hover:text-muted-foreground font-medium underline"
+          >
+            {isLoading ? 'Loading...' : 'View more'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
