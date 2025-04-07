@@ -125,7 +125,6 @@ function Articles() {
             title={blog.title}
             description={blog.description}
             author={blog.author}
-            date={blog.date}
             date={new Date(blog.date).toLocaleDateString('en-GB', {
               day: 'numeric',
 
