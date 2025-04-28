@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Search } from 'lucide-react'
+import { Search, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import authorImage from '@/assets/author-image.jpg'
 import {
@@ -46,7 +46,7 @@ function Articles() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto md:px-6 lg:px-8 mb-40">
+    <div className="w-full max-w-7xl mx-auto md:px-6 lg:px-8 mb-20">
       <h2 className="text-xl font-bold mb-4 px-4">Latest articles</h2>
       <div className="bg-[#EFEEEB] px-4 py-4 md:py-3 md:rounded-2xl flex flex-col space-y-4 md:gap-16 md:flex-row-reverse md:items-center md:space-y-0 md:justify-between mb-10">
         <div className="w-full md:max-w-sm">
@@ -124,12 +124,22 @@ function Articles() {
         ))}
       </article>
       {hasMore && (
-        <div className="text-center mt-8">
+        <div className="text-center mt-20">
           <button
             onClick={handleLoadMore}
-            className="hover:text-muted-foreground font-medium underline"
+            className={`font-medium ${
+              !isLoading ? 'underline hover:text-muted-foreground' : ''
+            }`}
+            disabled={isLoading}
           >
-            {isLoading ? 'Loading...' : 'View more'}
+            {isLoading ? (
+              <div className="flex flex-col items-center min-h-lvh">
+                <Loader2 className="w-12 h-12 animate-spin text-foreground" />
+                <p className="mt-4">Loading...</p>
+              </div>
+            ) : (
+              'View more'
+            )}
           </button>
         </div>
       )}
